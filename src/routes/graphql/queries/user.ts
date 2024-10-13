@@ -1,7 +1,6 @@
 import { GraphQLNonNull, GraphQLList, GraphQLFieldConfig, ThunkObjMap } from 'graphql';
 import { User } from '../types/user.js';
 import { UUIDType } from '../types/uuid.js';
-import { httpErrors } from '@fastify/sensible';
 
 export const UserQueries: ThunkObjMap<GraphQLFieldConfig<any, any, any>> = {
   users: {
@@ -22,9 +21,7 @@ export const UserQueries: ThunkObjMap<GraphQLFieldConfig<any, any, any>> = {
           id,
         },
       });
-      if (user === null) {
-        throw httpErrors.notFound();
-      }
+
       return user;
     },
   },

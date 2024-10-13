@@ -1,14 +1,13 @@
 import { GraphQLNonNull, GraphQLList, GraphQLFieldConfig, ThunkObjMap } from 'graphql';
 import { Profile } from '../types/profile.js';
 import { UUIDType } from '../types/uuid.js';
-import { httpErrors } from '@fastify/sensible';
 
 export const ProfileQueries: ThunkObjMap<GraphQLFieldConfig<any, any, any>> = {
   profiles: {
     type: new GraphQLNonNull(new GraphQLList(new GraphQLNonNull(Profile))),
 
     resolve: async (_, _args, { prisma }) => {
-      return await prisma.post.findMany();
+      return await prisma.profile.findMany();
     },
   },
   profile: {
@@ -22,9 +21,7 @@ export const ProfileQueries: ThunkObjMap<GraphQLFieldConfig<any, any, any>> = {
           id,
         },
       });
-      if (profile === null) {
-        throw httpErrors.notFound();
-      }
+
       return profile;
     },
   },
