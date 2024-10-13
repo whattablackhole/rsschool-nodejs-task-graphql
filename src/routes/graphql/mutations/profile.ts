@@ -12,7 +12,7 @@ export const ProfileMutations: ThunkObjMap<GraphQLFieldConfig<any, any, any>> = 
     resolve: async (_, args, context) => {
       const { prisma } = context;
       const { dto } = args;
-      return await prisma.profiles.create({
+      return await prisma.profile.create({
         data: dto,
       });
     },
@@ -26,7 +26,7 @@ export const ProfileMutations: ThunkObjMap<GraphQLFieldConfig<any, any, any>> = 
     resolve: async (_, args, context) => {
       const { prisma } = context;
       const { dto, id } = args;
-      return await prisma.profiles.update({
+      return await prisma.profile.update({
         where: { id: id },
         data: dto,
       });
@@ -40,7 +40,7 @@ export const ProfileMutations: ThunkObjMap<GraphQLFieldConfig<any, any, any>> = 
     resolve: async (_, args, context) => {
       const { prisma } = context;
       const { id } = args;
-      await prisma.profiles.delete({
+      await prisma.profile.delete({
         where: {
           id,
         },

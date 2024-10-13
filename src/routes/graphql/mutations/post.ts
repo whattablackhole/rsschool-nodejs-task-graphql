@@ -12,7 +12,7 @@ export const PostMutations: ThunkObjMap<GraphQLFieldConfig<any, any, any>> = {
     resolve: async (_, args, context) => {
       const { prisma } = context;
       const { dto } = args;
-      return await prisma.posts.create({
+      return await prisma.post.create({
         data: dto,
       });
     },
@@ -26,7 +26,7 @@ export const PostMutations: ThunkObjMap<GraphQLFieldConfig<any, any, any>> = {
     resolve: async (_, args, context) => {
       const { prisma } = context;
       const { dto, id } = args;
-      return await prisma.posts.update({
+      return await prisma.post.update({
         where: { id: id },
         data: dto,
       });
@@ -41,7 +41,7 @@ export const PostMutations: ThunkObjMap<GraphQLFieldConfig<any, any, any>> = {
     resolve: async (_, args, context) => {
       const { prisma } = context;
       const { id } = args;
-      await prisma.posts.delete({
+      await prisma.post.delete({
         where: {
           id,
         },
