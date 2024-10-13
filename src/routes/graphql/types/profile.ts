@@ -1,6 +1,6 @@
 import { GraphQLObjectType, GraphQLNonNull, GraphQLBoolean, GraphQLInt } from 'graphql';
 import { UUIDType } from './uuid.js';
-import { MemberType } from './membertype.js';
+import { MemberType } from './member-type.js';
 
 export const Profile = new GraphQLObjectType({
   name: 'Profile',
