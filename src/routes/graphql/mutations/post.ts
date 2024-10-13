@@ -9,7 +9,13 @@ export const PostMutations: ThunkObjMap<GraphQLFieldConfig<any, any, any>> = {
     args: {
       dto: { type: new GraphQLNonNull(CreatePostInput) },
     },
-    resolve: async () => {},
+    resolve: async (_, args, context) => {
+      const { prisma } = context;
+      const { dto } = args;
+      return await prisma.posts.create({
+        data: dto,
+      });
+    },
   },
   changePost: {
     type: new GraphQLNonNull(Post),
@@ -17,7 +23,14 @@ export const PostMutations: ThunkObjMap<GraphQLFieldConfig<any, any, any>> = {
       id: { type: new GraphQLNonNull(UUIDType) },
       dto: { type: new GraphQLNonNull(ChangePostInput) },
     },
-    resolve: async () => {},
+    resolve: async (_, args, context) => {
+      const { prisma } = context;
+      const { dto, id } = args;
+      return await prisma.posts.update({
+        where: { id: id },
+        data: dto,
+      });
+    },
   },
 
   deletePost: {
@@ -25,6 +38,15 @@ export const PostMutations: ThunkObjMap<GraphQLFieldConfig<any, any, any>> = {
     args: {
       id: { type: new GraphQLNonNull(UUIDType) },
     },
-    resolve: async () => {},
+    resolve: async (_, args, context) => {
+      const { prisma } = context;
+      const { id } = args;
+      await prisma.posts.delete({
+        where: {
+          id,
+        },
+      });
+      return 'Ok';
+    },
   },
 };

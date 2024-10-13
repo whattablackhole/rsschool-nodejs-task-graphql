@@ -9,7 +9,13 @@ export const ProfileMutations: ThunkObjMap<GraphQLFieldConfig<any, any, any>> = 
     args: {
       dto: { type: new GraphQLNonNull(CreateProfileInput) },
     },
-    resolve: async () => {},
+    resolve: async (_, args, context) => {
+      const { prisma } = context;
+      const { dto } = args;
+      return await prisma.profiles.create({
+        data: dto,
+      });
+    },
   },
   changeProfile: {
     type: new GraphQLNonNull(Profile),
@@ -17,13 +23,29 @@ export const ProfileMutations: ThunkObjMap<GraphQLFieldConfig<any, any, any>> = 
       id: { type: new GraphQLNonNull(UUIDType) },
       dto: { type: new GraphQLNonNull(ChangeProfileInput) },
     },
-    resolve: async () => {},
+    resolve: async (_, args, context) => {
+      const { prisma } = context;
+      const { dto, id } = args;
+      return await prisma.profiles.update({
+        where: { id: id },
+        data: dto,
+      });
+    },
   },
   deleteProfile: {
     type: new GraphQLNonNull(GraphQLString),
     args: {
       id: { type: new GraphQLNonNull(UUIDType) },
     },
-    resolve: async () => {},
+    resolve: async (_, args, context) => {
+      const { prisma } = context;
+      const { id } = args;
+      await prisma.profiles.delete({
+        where: {
+          id,
+        },
+      });
+      return 'Ok';
+    },
   },
 };
