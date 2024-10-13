@@ -1,4 +1,4 @@
-import { GraphQLNonNull, GraphQLObjectType, GraphQLString } from 'graphql';
+import { GraphQLList, GraphQLNonNull, GraphQLObjectType, GraphQLString } from 'graphql';
 import { User } from './user.js';
 import { UUIDType } from './uuid.js';
 import { Profile } from './profile.js';
@@ -11,6 +11,7 @@ import {
   CreateProfileInput,
   CreateUserInput,
 } from './inputs.js';
+import { MemberType, MemberTypeId } from './membertype.js';
 
 export const MutationRootType = new GraphQLObjectType({
   name: 'MutationRootType',
@@ -107,10 +108,65 @@ export const MutationRootType = new GraphQLObjectType({
 export const QueryRootType = new GraphQLObjectType({
   name: 'QueryRootType',
   fields: {
-    getUser: {
+    memberTypes: {
+      type: new GraphQLNonNull(new GraphQLList(new GraphQLNonNull(MemberType))),
+
+      resolve: async () => {
+        return '';
+      },
+    },
+    memberType: {
+      type: MemberType,
+      args: {
+        id: { type: new GraphQLNonNull(MemberTypeId) },
+      },
+      resolve: async () => {
+        return '';
+      },
+    },
+    users: {
+      type: new GraphQLNonNull(new GraphQLList(new GraphQLNonNull(User))),
+
+      resolve: async () => {
+        return '';
+      },
+    },
+    user: {
       type: User,
       args: {
-        userId: { type: UUIDType },
+        id: { type: new GraphQLNonNull(UUIDType) },
+      },
+      resolve: async () => {
+        return '';
+      },
+    },
+    posts: {
+      type: new GraphQLNonNull(new GraphQLList(new GraphQLNonNull(Post))),
+
+      resolve: async () => {
+        return '';
+      },
+    },
+    post: {
+      type: Post,
+      args: {
+        id: { type: new GraphQLNonNull(UUIDType) },
+      },
+      resolve: async () => {
+        return '';
+      },
+    },
+    profiles: {
+      type: new GraphQLNonNull(new GraphQLList(new GraphQLNonNull(Profile))),
+
+      resolve: async () => {
+        return '';
+      },
+    },
+    profile: {
+      type: Profile,
+      args: {
+        id: { type: new GraphQLNonNull(UUIDType) },
       },
       resolve: async () => {
         return '';

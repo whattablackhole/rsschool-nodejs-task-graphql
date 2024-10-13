@@ -28,7 +28,7 @@ export const CreateProfileInput = new GraphQLInputObjectType({
   },
 });
 export const CreateUserInput = new GraphQLInputObjectType({
-  name: 'CreateProfileInput',
+  name: 'CreateUserInput',
   fields: {
     name: { type: new GraphQLNonNull(GraphQLString) },
     balance: { type: new GraphQLNonNull(GraphQLFloat) },
