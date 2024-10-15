@@ -8,6 +8,8 @@ import {
 import { UUIDType } from './uuid.js';
 import { Profile } from './profile.js';
 import { Post } from './post.js';
+import { PrismaClient } from '@prisma/client';
+import { DataLoadersContainer } from '../loader.js';
 
 export const User = new GraphQLObjectType({
   name: 'User',
@@ -17,42 +19,52 @@ export const User = new GraphQLObjectType({
     balance: { type: new GraphQLNonNull(GraphQLFloat) },
     profile: {
       type: Profile,
-        resolve: async (parent, _args, { prisma }) => {
-          return await prisma.profile.findUnique({ where: { userId: parent.id } });
-        },
+      resolve: async (
+        parent,
+        _args,
+        { loaders, prisma }: { prisma: PrismaClient; loaders: DataLoadersContainer },
+        info,
+      ) => {
+        return await loaders.getProfileByUserIDLoader(info).load(parent.id);
+      
+      },
     },
     posts: {
       type: new GraphQLNonNull(new GraphQLList(new GraphQLNonNull(Post))),
-      resolve: async (parent, _args, { prisma }) => {
-        return prisma.post.findMany({ where: { authorId: parent.id } });
+      resolve: async (
+        parent,
+        _args,
+        { loaders, prisma }: { prisma: PrismaClient; loaders: DataLoadersContainer },
+        info,
+      ) => {
+        return await loaders.getPostByUserIDLoader(info).load(parent.id);
       },
     },
     userSubscribedTo: {
       type: new GraphQLNonNull(new GraphQLList(new GraphQLNonNull(User))),
-      resolve: async (parent, _args, { prisma }) => {
-        return await prisma.user.findMany({
-          where: {
-            subscribedToUser: {
-              some: {
-                subscriberId: parent.id,
-              },
-            },
-          },
-        });
+      resolve: async (
+        parent,
+        _args,
+
+        { loaders, prisma }: { prisma: PrismaClient; loaders: DataLoadersContainer },
+        info,
+      ) => {
+        const subscriptions = parent.userSubscribedTo || [];
+        const loader = loaders.getUserLoader(info);
+        return subscriptions.map((sub) => loader.load(sub.authorId));
       },
     },
     subscribedToUser: {
       type: new GraphQLNonNull(new GraphQLList(new GraphQLNonNull(User))),
-      resolve: async (parent, _args, { prisma }) => {
-        return prisma.user.findMany({
-          where: {
-            userSubscribedTo: {
-              some: {
-                authorId: parent.id,
-              },
-            },
-          },
-        });
+      resolve: async (
+        parent,
+        _args,
+        { loaders, prisma }: { prisma: PrismaClient; loaders: DataLoadersContainer },
+        info,
+      ) => {
+        const subscriptions = parent.subscribedToUser || [];
+        const loader = loaders.getUserLoader(info);
+        return subscriptions.map((sub) => loader.load(sub.subscriberId));
       },
     },
   }),
